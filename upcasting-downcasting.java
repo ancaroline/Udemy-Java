@@ -51,7 +51,7 @@ public class Account {
 	}
 
 	public void withdraw(double amount) {
-		balance -= amount;
+		balance -= amount + 5.0;
 	}
 
 	public void deposit(double amount) {
@@ -114,6 +114,12 @@ public class SavingsAccount extends Account {
 
 	public void updateBalance() {
 		balance += balance * interestRate;
+	}
+
+	// sobreposição
+	@Override
+	public void withdraw(double amount) {
+		balance -= amount;
 	}
 }
 
