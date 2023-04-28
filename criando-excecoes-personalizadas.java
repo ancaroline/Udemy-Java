@@ -21,13 +21,55 @@ reserva, conforme as seguintes regras:
  Solução 3 (boa) - tratamento de exceções
  */
 
-// SOLUÇÃO 1
-
+// SOLUÇÃO 1 - MUITO RUIM
 // program
 package application;
-public class Program {
-	public static void main(String[] args) {
 
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
+import java.util.Date;
+
+public class Program {
+	public static void main(String[] args) throws ParseException {
+
+        Scanner sc = new Scanner(System.in);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.print("Room number: ");
+        int number = sc,nextInt();
+        System.out.print("Check-in date (dd/MM/yyyy): ");
+        Date checkIn = sdf.parse(sc.next());
+        System.out.print("Check-out date (dd/MM/yyyy): ");
+        Date checkOut = sdf.parse(sc.next());
+
+        if (!checkOut.after(checkIn)) {
+            System.out.println("Error in reservation: Check-out date must be after check-in date.");
+        }
+        else {
+            Reservation reservation = new Reservation(number, checkIn, checkOut);
+            System.out.println("Reservation: " + reservation);
+
+            System.out.println();
+            System.out.println("Enter data to update the reservation:");
+            System.out.print("Check-in date (dd/MM/yyyy): ");
+            checkIn = sdf.parse(sc.next());
+            System.out.print("Check-out date (dd/MM/yyyy): ");
+            checkOut = sdf.parse(sc.next());
+
+            // cria uma data de agora
+            Date now = new Date();
+            if (checkIn.before(now) || checkOut.before(now)) {
+                System.out.println("Error in reservation: Reservation dates for update must be future dates.");
+            }
+            else if (!checkOut.after(checkIn)) {
+                System.out.println("Error in reservation: Check-out date must be after check-in date.");
+            }
+            else {
+                reservation.updateDates(checkIn, checkOut);
+                System.out.println("Reservation: " + reservation);
+            }
+        }
+        sc.close();
 	}
 }
 
@@ -43,7 +85,7 @@ public class Reservation {
 	private Date checkOut;
 
     // para conseguir converter a data para dd/mm/yyyy
-    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
         this.roomNumber = roomNumber;
@@ -80,7 +122,7 @@ public class Reservation {
             + sdf.format(checkOut)
             + ", "
             + duration()
-            + "night"
+            + "nights";
     }
 
 }
